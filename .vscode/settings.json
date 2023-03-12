@@ -1,0 +1,6 @@
+{
+    "[toml]":{
+        "editor.defaultFormatter": "tamasfe.even-better-toml"
+    },
+    "solidity.compileUsingRemoteVersion": "v0.7.6+commit.7338295f"
+}
