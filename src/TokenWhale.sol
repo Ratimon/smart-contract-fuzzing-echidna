@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.7.6;
 
-contract TokenWhale{
+contract TokenWhale {
     address player;
 
     uint256 public totalSupply;
@@ -12,7 +12,7 @@ contract TokenWhale{
     string public symbol = "SET";
     uint8 public decimals = 18;
 
-    function TokenWhaleChallenge(address _player) public {
+    constructor (address _player) {
         player = _player;
         totalSupply = 1000;
         balanceOf[player] = 1000;

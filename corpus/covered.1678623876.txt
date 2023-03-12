@@ -1,0 +1,98 @@
+/Users/rati/Projects/research/advanced_solidity/smart-contract-fuzzing-echidna/src/TokenWhale.sol
+  1 |     | // SPDX-License-Identifier: MIT
+  2 |     | pragma solidity =0.7.6;
+  3 |     | 
+  4 |     | contract TokenWhale {
+  5 |     |     address player;
+  6 |     | 
+  7 |     |     uint256 public totalSupply;
+  8 | *   |     mapping(address => uint256) public balanceOf;
+  9 | *   |     mapping(address => mapping(address => uint256)) public allowance;
+ 10 |     | 
+ 11 | *   |     string public name = "Simple ERC20 Token";
+ 12 | *   |     string public symbol = "SET";
+ 13 | *   |     uint8 public decimals = 18;
+ 14 |     | 
+ 15 |     |     constructor (address _player) {
+ 16 |     |         player = _player;
+ 17 |     |         totalSupply = 1000;
+ 18 |     |         balanceOf[player] = 1000;
+ 19 |     |     }
+ 20 |     | 
+ 21 |     |     function isComplete() public view returns (bool) {
+ 22 |     |         return balanceOf[player] >= 1000000;
+ 23 |     |     }
+ 24 |     | 
+ 25 |     |     event Transfer(address indexed from, address indexed to, uint256 value);
+ 26 |     | 
+ 27 | *   |     function _transfer(address to, uint256 value) internal {
+ 28 | *   |         balanceOf[msg.sender] -= value;
+ 29 | *   |         balanceOf[to] += value;
+ 30 |     | 
+ 31 | *   |         emit Transfer(msg.sender, to, value);
+ 32 |     |     }
+ 33 |     | 
+ 34 | *r  |     function transfer(address to, uint256 value) public {
+ 35 | *r  |         require(balanceOf[msg.sender] >= value);
+ 36 | *   |         require(balanceOf[to] + value >= balanceOf[to]);
+ 37 |     | 
+ 38 | *   |         _transfer(to, value);
+ 39 |     |     }
+ 40 |     | 
+ 41 |     |     event Approval(address indexed owner, address indexed spender, uint256 value);
+ 42 |     | 
+ 43 | *   |     function approve(address spender, uint256 value) public {
+ 44 | *   |         allowance[msg.sender][spender] = value;
+ 45 | *   |         emit Approval(msg.sender, spender, value);
+ 46 |     |     }
+ 47 |     | 
+ 48 | *r  |     function transferFrom(address from, address to, uint256 value) public {
+ 49 | *r  |         require(balanceOf[from] >= value);
+ 50 | *r  |         require(balanceOf[to] + value >= balanceOf[to]);
+ 51 | *r  |         require(allowance[from][msg.sender] >= value);
+ 52 |     | 
+ 53 | *   |         allowance[from][msg.sender] -= value;
+ 54 | *   |         _transfer(to, value);
+ 55 |     |     }
+ 56 |     | }
+
+/Users/rati/Projects/research/advanced_solidity/smart-contract-fuzzing-echidna/src/echidna/FuzzTokenWhale.sol
+  1 |     | // SPDX-License-Identifier: MIT
+  2 |     | pragma solidity =0.7.6;
+  3 |     | 
+  4 |     | import {TokenWhale} from "../TokenWhale.sol";
+  5 | *r  | 
+  6 |     | contract EchidnaFuzzTokenWhale is TokenWhale {
+  7 |     | 
+  8 |     |     address echidna_caller = msg.sender;
+  9 |     |     // TokenWhale tokenWhale;
+ 10 |     | 
+ 11 |     |     constructor() TokenWhale(echidna_caller)  {
+ 12 |     |         // tokenWhale = new TokenWhale(echidna_caller);
+ 13 |     |     }
+ 14 |     | 
+ 15 |     |     function echidna_test_balance() public view returns (bool) {
+ 16 |     |         return !isComplete();
+ 17 |     |     }
+ 18 |     | 
+ 19 |     | 
+ 20 |     | 
+ 21 |     | }
+ 22 |     | 
+ 23 |     | // contract EchidnaFuzzTokenWhale  {
+ 24 |     | 
+ 25 |     | //     address echidna_caller = msg.sender;
+ 26 |     | //     TokenWhale tokenWhale;
+ 27 |     | 
+ 28 |     | //     constructor()  {
+ 29 |     | //         tokenWhale = new TokenWhale(echidna_caller);
+ 30 |     | //     }
+ 31 |     | 
+ 32 |     | //     function echidna_test_balance() public view returns (bool) {
+ 33 |     | //         return !tokenWhale.isComplete();
+ 34 |     | //     }
+ 35 |     | 
+ 36 |     | 
+ 37 |     | 
+ 38 |     | // }
+
