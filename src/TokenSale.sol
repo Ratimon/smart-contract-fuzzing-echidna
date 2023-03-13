@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.7.6;
 
-contract TokenSaleChallenge {
+contract TokenSale {
+    
     mapping(address => uint256) public balanceOf;
     uint256 constant PRICE_PER_TOKEN = 1 ether;
 
