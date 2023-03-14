@@ -2,7 +2,7 @@
 
 testMode: property
 corpusDir: coverage-tokensale
-balanceContract: 1000000000000000000000
+balanceContract: 1000000000000000000
 format: "text"
 
 # testLimit: 500000
