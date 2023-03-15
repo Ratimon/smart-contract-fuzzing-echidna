@@ -7,6 +7,7 @@ contract TokenSale {
     uint256 constant PRICE_PER_TOKEN = 1 ether;
 
    constructor () payable {
+        require(msg.value == 1 ether);
     }
 
     function isComplete() public view returns (bool) {

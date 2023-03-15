@@ -1,9 +1,9 @@
 #https://github.com/crytic/echidna/wiki/Config
 
-testMode: property
+testMode: "assertion"
 corpusDir: coverage-tokensale
 balanceContract: 1000000000000000000
 format: "text"
 
-# testLimit: 500000
-# shrinkLimit: 50000
+testLimit: 500000
+shrinkLimit: 10000
