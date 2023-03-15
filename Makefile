@@ -3,3 +3,6 @@ echidna-TokenWhale:
 
 echidna-TokenSale:
 	echidna src/echidna/FuzzTokenSale.sol --contract EchidnaFuzzTokenSale --config src/echidna/TokenSale.yml
+
+foundry-TokenSale:
+	forge test --match-path test/TokenSale.invariants.t.sol -vvv
