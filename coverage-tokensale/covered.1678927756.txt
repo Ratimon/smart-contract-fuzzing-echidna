@@ -1,0 +1,88 @@
+/Users/rati/Projects/research/advanced_solidity/smart-contract-fuzzing-echidna/src/TokenSale.sol
+  1 |     | // SPDX-License-Identifier: MIT
+  2 |     | pragma solidity =0.7.6;
+  3 |     | 
+  4 |     | contract TokenSale {
+  5 |     | 
+  6 | *   |     mapping(address => uint256) public balanceOf;
+  7 | *er |     uint256 constant PRICE_PER_TOKEN = 1 ether;
+  8 |     | 
+  9 |     |    constructor () payable {
+ 10 |     |         require(msg.value == 1 ether);
+ 11 |     |     }
+ 12 |     | 
+ 13 | *e  |     function isComplete() public view returns (bool) {
+ 14 | *e  |         return address(this).balance < 1 ether;
+ 15 |     |     }
+ 16 |     | 
+ 17 | *er |     function buy(uint256 numTokens) public payable {
+ 18 | *er |         require(msg.value == numTokens * PRICE_PER_TOKEN);
+ 19 |     | 
+ 20 | *er |         balanceOf[msg.sender] += numTokens;
+ 21 |     |     }
+ 22 |     | 
+ 23 | *er |     function sell(uint256 numTokens) public {
+ 24 | *er |         require(balanceOf[msg.sender] >= numTokens);
+ 25 |     | 
+ 26 | *e  |         balanceOf[msg.sender] -= numTokens;
+ 27 | *e  |         msg.sender.transfer(numTokens * PRICE_PER_TOKEN);
+ 28 |     |     }
+ 29 |     | }
+
+/Users/rati/Projects/research/advanced_solidity/smart-contract-fuzzing-echidna/src/echidna/FuzzTokenSale.sol
+  1 |     | // SPDX-License-Identifier: MIT
+  2 |     | pragma solidity =0.7.6;
+  3 |     | 
+  4 |     | import {TokenSale} from "../TokenSale.sol";
+  5 | *er | 
+  6 |     | contract EchidnaFuzzTokenSale is TokenSale {
+  7 |     | 
+  8 |     |     address echidna_caller = msg.sender;
+  9 |     | 
+ 10 |     |     constructor() TokenSale() payable {
+ 11 |     |         require(msg.value == 1 ether);
+ 12 |     |         
+ 13 |     |     }
+ 14 |     | 
+ 15 |     |     /**
+ 16 |     |      * @notice caller buy 1 ETH
+ 17 |     |      */
+ 18 |     |     // function testBuy(uint256 _value) public {
+ 19 |     |     //     require(_value == 1);
+ 20 |     |     //     uint256 weiToSend = _value * 1 ether;
+ 21 |     |     //     this.buy{value: weiToSend}(_value);
+ 22 |     |     // }
+ 23 |     | 
+ 24 |     | 
+ 25 |     |     // invariant
+ 26 |     |     function echidna_test_balance() external view returns (bool) {
+ 27 |     |         return !isComplete();
+ 28 |     |     }
+ 29 |     | 
+ 30 |     | 
+ 31 | er  |     function  test_buy_then_sell(uint256 tokenAmountToBuy) public {
+ 32 |     | 
+ 33 | er  |         require( tokenAmountToBuy > 0);
+ 34 |     | 
+ 35 | er  |         uint256 PRICE_PER_TOKEN = 1 ether;
+ 36 | er  |         uint256 weiAmountToSend = (tokenAmountToBuy * PRICE_PER_TOKEN);
+ 37 |     | 
+ 38 |     | 
+ 39 | er  |         this.buy{value: weiAmountToSend}(tokenAmountToBuy);
+ 40 |     | 
+ 41 |     |         // // uint256 tokenToSell= tokenToBuy;
+ 42 |     | 
+ 43 | er  |         sell(1);
+ 44 |     | 
+ 45 |     |         // isComplete means  address(this).balance < 1 ether
+ 46 |     |         // assert(false);
+ 47 | e   |         assert(isComplete());
+ 48 |     | 
+ 49 |     |         // return !isComplete();
+ 50 |     |     }
+ 51 |     | 
+ 52 |     | 
+ 53 |     | 
+ 54 |     | }
+ 55 |     | 
+

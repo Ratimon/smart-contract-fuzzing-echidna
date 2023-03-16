@@ -1,0 +1,96 @@
+<style> code { white-space: pre-wrap; display: block; background-color: #eee; }.executed { background-color: #afa; }.reverted { background-color: #ffa; }.unexecuted { background-color: #faa; }.neutral { background-color: #eee; }</style><b>/Users/rati/Projects/research/advanced_solidity/smart-contract-fuzzing-echidna/src/TokenSale.sol</b>
+<code>
+  1 |     | <span class='neutral'>// SPDX-License-Identifier: MIT</span>
+  2 |     | <span class='neutral'>pragma solidity =0.7.6;</span>
+  3 |     | <span class='unexecuted'></span>
+  4 |     | <span class='neutral'>contract TokenSale {</span>
+  5 |     | <span class='neutral'></span>
+  6 | *   | <span class='executed'>    mapping(address =&gt; uint256) public balanceOf;</span>
+  7 | *er | <span class='executed'>    uint256 constant PRICE_PER_TOKEN = 1 ether;</span>
+  8 |     | <span class='neutral'></span>
+  9 |     | <span class='neutral'>   constructor () payable {</span>
+ 10 |     | <span class='unexecuted'>        require(msg.value == 1 ether);</span>
+ 11 |     | <span class='neutral'>    }</span>
+ 12 |     | <span class='neutral'></span>
+ 13 | *e  | <span class='executed'>    function isComplete() public view returns (bool) {</span>
+ 14 | *e  | <span class='executed'>        return address(this).balance &lt; 1 ether;</span>
+ 15 |     | <span class='neutral'>    }</span>
+ 16 |     | <span class='neutral'></span>
+ 17 | *er | <span class='executed'>    function buy(uint256 numTokens) public payable {</span>
+ 18 | *er | <span class='executed'>        require(msg.value == numTokens * PRICE_PER_TOKEN);</span>
+ 19 |     | <span class='neutral'></span>
+ 20 | *er | <span class='executed'>        balanceOf[msg.sender] += numTokens;</span>
+ 21 |     | <span class='neutral'>    }</span>
+ 22 |     | <span class='neutral'></span>
+ 23 | *er | <span class='executed'>    function sell(uint256 numTokens) public {</span>
+ 24 | *er | <span class='executed'>        require(balanceOf[msg.sender] &gt;= numTokens);</span>
+ 25 |     | <span class='neutral'></span>
+ 26 | *e  | <span class='executed'>        balanceOf[msg.sender] -= numTokens;</span>
+ 27 | *e  | <span class='executed'>        msg.sender.transfer(numTokens * PRICE_PER_TOKEN);</span>
+ 28 |     | <span class='neutral'>    }</span>
+ 29 |     | <span class='neutral'>}</span>
+
+</code>
+<br />
+
+<b>/Users/rati/Projects/research/advanced_solidity/smart-contract-fuzzing-echidna/src/echidna/FuzzTokenSale.sol</b>
+<code>
+  1 |     | <span class='neutral'>// SPDX-License-Identifier: MIT</span>
+  2 |     | <span class='neutral'>pragma solidity =0.7.6;</span>
+  3 |     | <span class='neutral'></span>
+  4 |     | <span class='neutral'>import {TokenSale} from &quot;../TokenSale.sol&quot;;</span>
+  5 | *er | <span class='executed'></span>
+  6 |     | <span class='neutral'>contract EchidnaFuzzTokenSale is TokenSale {</span>
+  7 |     | <span class='neutral'></span>
+  8 |     | <span class='unexecuted'>    address echidna_caller = msg.sender;</span>
+  9 |     | <span class='neutral'></span>
+ 10 |     | <span class='neutral'>    constructor() TokenSale() payable {</span>
+ 11 |     | <span class='unexecuted'>        require(msg.value == 1 ether);</span>
+ 12 |     | <span class='neutral'>        </span>
+ 13 |     | <span class='neutral'>    }</span>
+ 14 |     | <span class='neutral'></span>
+ 15 |     | <span class='neutral'>    /**</span>
+ 16 |     | <span class='neutral'>     * @notice caller buy 1 ETH</span>
+ 17 |     | <span class='neutral'>     */</span>
+ 18 |     | <span class='neutral'>    // function testBuy(uint256 _value) public {</span>
+ 19 |     | <span class='neutral'>    //     require(_value == 1);</span>
+ 20 |     | <span class='neutral'>    //     uint256 weiToSend = _value * 1 ether;</span>
+ 21 |     | <span class='neutral'>    //     this.buy{value: weiToSend}(_value);</span>
+ 22 |     | <span class='neutral'>    // }</span>
+ 23 |     | <span class='neutral'></span>
+ 24 |     | <span class='neutral'></span>
+ 25 |     | <span class='neutral'>    // invariant</span>
+ 26 |     | <span class='unexecuted'>    function echidna_test_balance() external view returns (bool) {</span>
+ 27 |     | <span class='unexecuted'>        return !isComplete();</span>
+ 28 |     | <span class='neutral'>    }</span>
+ 29 |     | <span class='neutral'></span>
+ 30 |     | <span class='neutral'></span>
+ 31 | er  | <span class='reverted'>    function  test_buy_then_sell(uint256 tokenAmountToBuy) public {</span>
+ 32 |     | <span class='neutral'></span>
+ 33 | er  | <span class='reverted'>        require( tokenAmountToBuy &gt; 0);</span>
+ 34 |     | <span class='neutral'></span>
+ 35 | er  | <span class='reverted'>        uint256 PRICE_PER_TOKEN = 1 ether;</span>
+ 36 | er  | <span class='reverted'>        uint256 weiAmountToSend = (tokenAmountToBuy * PRICE_PER_TOKEN);</span>
+ 37 |     | <span class='neutral'></span>
+ 38 |     | <span class='neutral'></span>
+ 39 | er  | <span class='reverted'>        this.buy{value: weiAmountToSend}(tokenAmountToBuy);</span>
+ 40 |     | <span class='neutral'></span>
+ 41 |     | <span class='neutral'>        // // uint256 tokenToSell= tokenToBuy;</span>
+ 42 |     | <span class='neutral'></span>
+ 43 | er  | <span class='reverted'>        sell(1);</span>
+ 44 |     | <span class='neutral'></span>
+ 45 |     | <span class='neutral'>        // isComplete means  address(this).balance &lt; 1 ether</span>
+ 46 |     | <span class='neutral'>        // assert(false);</span>
+ 47 | e   | <span class='reverted'>        assert(isComplete());</span>
+ 48 |     | <span class='neutral'></span>
+ 49 |     | <span class='neutral'>        // return !isComplete();</span>
+ 50 |     | <span class='neutral'>    }</span>
+ 51 |     | <span class='neutral'></span>
+ 52 |     | <span class='neutral'></span>
+ 53 |     | <span class='neutral'></span>
+ 54 |     | <span class='neutral'>}</span>
+ 55 |     | <span class='neutral'></span>
+
+</code>
+<br />
+

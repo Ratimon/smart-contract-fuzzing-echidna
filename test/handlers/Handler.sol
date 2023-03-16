@@ -33,15 +33,8 @@ contract Handler is CommonBase, StdCheats, StdUtils {
     // }
 
     function buy_then_sell(uint256 tokenAmountToBuy) public {
-    // function buy_then_sell(uint256 tokenAmountToBuy, uint256 weiAmountToSend) public {
-
-        
-
+    
         tokenAmountToBuy = bound(tokenAmountToBuy, 0, type(uint256).max);
-        // tokenAmountToBuy = bound(tokenAmountToBuy, 115792089237316195423570985008687907853269984665640564039458, 115792089237316195423570985008687907853269984665640564039460);
-
-        // weiAmountToSend = bound(weiAmountToSend, 0, address(this).balance);
-        // weiAmountToSend = 415992086870360064;
 
         uint256 PRICE_PER_TOKEN = 1 ether;
         uint256 weiAmountToSend = (tokenAmountToBuy * PRICE_PER_TOKEN);

@@ -12,42 +12,30 @@ contract EchidnaFuzzTokenSale is TokenSale {
         
     }
 
-    // /**
-    //  * @notice caller buy 1 ETH
-    //  */
-    // function testBuy(uint256 _value) public {
-    //     require(_value == 1);
-    //     uint256 weiToSend = _value * 1 ether;
-    //     this.buy{value: weiToSend}(_value);
-    // }
-
-
     // invariant
     function echidna_test_balance() external view returns (bool) {
         return !isComplete();
     }
 
 
-    // function test_sell(uint256 tokenToBuy, uint256 weiToSend)  external  {
+    function  test_buy_then_sell(uint256 tokenAmountToBuy) public {
 
-    //      require( tokenToBuy > 0);
-    //      require( weiToSend > 0);
+        require( tokenAmountToBuy > 0);
 
-    //     require( tokenToBuy > weiToSend);
+        uint256 PRICE_PER_TOKEN = 1 ether;
+        uint256 weiAmountToSend = (tokenAmountToBuy * PRICE_PER_TOKEN);
 
-    //     // uint256 weiToSend = _value * 1 ether;
-    //     this.buy{value: weiToSend}(tokenToBuy);
 
-    //     // // uint256 tokenToSell= tokenToBuy;
+        this.buy{value: weiAmountToSend}(tokenAmountToBuy);
 
-    //     sell(1);
+        // // uint256 tokenToSell= tokenToBuy;
 
-    //     // isComplete means  address(this).balance < 1 ether
-    //     assert(false);
-    //     assert(isComplete());
+        sell(1);
 
-    //     // return !isComplete();
-    // }
+        // isComplete means  address(this).balance < 1 ether
+        // assert(false);
+        assert(isComplete());
+    }
 
 
 
