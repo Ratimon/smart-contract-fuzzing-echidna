@@ -16,9 +16,14 @@ contract TokenSaleInvariants is StdInvariant, Test {
 
     function setUp() public {
         tokenSale = new TokenSale{value: 1 ether}();
+         vm.label(address(tokenSale), "tokenSale");
+
         handler = new Handler(tokenSale);
+        vm.label(address(handler), "Handler");
 
         targetContract(address(handler));
+        
+        vm.label(address(this), "TokenSaleInvariants");
     }
 
     /**
