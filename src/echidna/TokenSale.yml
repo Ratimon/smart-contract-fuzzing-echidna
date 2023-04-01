@@ -1,6 +1,6 @@
 #https://github.com/crytic/echidna/wiki/Config
 
-testMode: "assertion"
+testMode: assertion
 corpusDir: coverage-tokensale
 balanceContract: 1000000000000000000
 format: "text"

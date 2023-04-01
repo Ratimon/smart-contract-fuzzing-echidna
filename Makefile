@@ -1,3 +1,6 @@
+echidna-Token:
+	echidna src/echidna/FuzzToken.sol --contract EchidnaFuzzToken  --config src/echidna/Token.yml
+
 echidna-TokenWhale:
 	echidna src/echidna/FuzzTokenWhale.sol --contract EchidnaFuzzTokenWhale  --config src/echidna/TokenWhale.yml
 

@@ -19,19 +19,11 @@ contract EchidnaFuzzTokenSale is TokenSale {
 
 
     function  test_buy_then_sell(uint256 tokenAmountToBuy) public {
-
         require( tokenAmountToBuy > 0);
-
         uint256 PRICE_PER_TOKEN = 1 ether;
         uint256 weiAmountToSend = (tokenAmountToBuy * PRICE_PER_TOKEN);
-
-
         this.buy{value: weiAmountToSend}(tokenAmountToBuy);
-
-        // // uint256 tokenToSell= tokenToBuy;
-
         sell(1);
-
         // isComplete means  address(this).balance < 1 ether
         // assert(false);
         assert(isComplete());

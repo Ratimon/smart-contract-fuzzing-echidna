@@ -1,0 +1,60 @@
+<style> code { white-space: pre-wrap; display: block; background-color: #eee; }.executed { background-color: #afa; }.reverted { background-color: #ffa; }.unexecuted { background-color: #faa; }.neutral { background-color: #eee; }</style><b>/Users/rati/Projects/research/advanced_solidity/smart-contract-fuzzing-echidna/src/Token.sol</b>
+<code>
+  1 |     | <span class='neutral'>// SPDX-License-Identifier: MIT</span>
+  2 |     | <span class='unexecuted'>pragma solidity =0.7.6;</span>
+  3 |     | <span class='neutral'>contract Token {</span>
+  4 |     | <span class='neutral'></span>
+  5 |     | <span class='neutral'>  mapping(address =&gt; uint) balances;</span>
+  6 | *   | <span class='executed'>  uint public totalSupply;</span>
+  7 |     | <span class='neutral'></span>
+  8 |     | <span class='unexecuted'>  constructor(uint _initialSupply) {</span>
+  9 |     | <span class='unexecuted'>    balances[msg.sender] = totalSupply = _initialSupply;</span>
+ 10 |     | <span class='neutral'>  }</span>
+ 11 |     | <span class='neutral'></span>
+ 12 | *e  | <span class='executed'>  function transfer(address _to, uint _value) public returns (bool) {</span>
+ 13 | *e  | <span class='executed'>    require(balances[msg.sender] - _value &gt;= 0);</span>
+ 14 | *e  | <span class='executed'>    balances[msg.sender] -= _value;</span>
+ 15 | *e  | <span class='executed'>    balances[_to] += _value;</span>
+ 16 | *e  | <span class='executed'>    return true;</span>
+ 17 |     | <span class='neutral'>  }</span>
+ 18 |     | <span class='neutral'></span>
+ 19 | *e  | <span class='executed'>  function balanceOf(address _owner) public view returns (uint balance) {</span>
+ 20 | *e  | <span class='executed'>    return balances[_owner];</span>
+ 21 |     | <span class='neutral'>  }</span>
+ 22 |     | <span class='neutral'>}</span>
+
+</code>
+<br />
+
+<b>/Users/rati/Projects/research/advanced_solidity/smart-contract-fuzzing-echidna/src/echidna/FuzzToken.sol</b>
+<code>
+  1 |     | <span class='neutral'>// SPDX-License-Identifier: MIT</span>
+  2 |     | <span class='neutral'>pragma solidity =0.7.6;</span>
+  3 |     | <span class='neutral'></span>
+  4 |     | <span class='neutral'>import {Token} from &quot;../Token.sol&quot;;</span>
+  5 | *er | <span class='executed'></span>
+  6 |     | <span class='neutral'>contract EchidnaFuzzToken is Token {</span>
+  7 |     | <span class='neutral'></span>
+  8 |     | <span class='unexecuted'>    address echidna_caller = msg.sender;</span>
+  9 |     | <span class='neutral'></span>
+ 10 |     | <span class='unexecuted'>    constructor() Token(20)  {</span>
+ 11 |     | <span class='neutral'>    }</span>
+ 12 |     | <span class='neutral'></span>
+ 13 |     | <span class='unexecuted'>    function echidna_test_balance() public view returns (bool) {</span>
+ 14 |     | <span class='unexecuted'>        return balanceOf(echidna_caller)&gt;20;</span>
+ 15 |     | <span class='neutral'>    }</span>
+ 16 |     | <span class='neutral'></span>
+ 17 | *er | <span class='executed'>    function  test_transfer(uint256 amountToTransfer) public {</span>
+ 18 | *er | <span class='executed'>        require( amountToTransfer &gt; 0);</span>
+ 19 |     | <span class='neutral'></span>
+ 20 | *e  | <span class='executed'>        transfer(echidna_caller, amountToTransfer);</span>
+ 21 | *e  | <span class='executed'>        assert(balanceOf(echidna_caller)&gt;20);</span>
+ 22 |     | <span class='neutral'>    }</span>
+ 23 |     | <span class='neutral'></span>
+ 24 |     | <span class='neutral'></span>
+ 25 |     | <span class='neutral'>}</span>
+ 26 |     | <span class='neutral'></span>
+
+</code>
+<br />
+

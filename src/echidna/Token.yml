@@ -1,8 +1,8 @@
 #https://github.com/crytic/echidna/wiki/Config
 
-testMode: property
-corpusDir: coverage-tokenwhale
+testMode: assertion
+corpusDir: coverage-token
 format: "text"
 
 testLimit: 100000
-shrinkLimit: 2
+shrinkLimit: 1
